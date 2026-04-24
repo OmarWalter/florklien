@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth overflow-x-hidden">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FLORK | The Flork Alien of Ethereum</title>
+    <link rel="icon" type="image/jpeg" href="images/flork-logo-favicon.png" />
+    <!-- Google Fonts: Handwritten style -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Patrick+Hand&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome for Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sketch: ["Indie Flower", "cursive"],
+              hand: ["Patrick Hand", "cursive"],
+            },
+            colors: {
+              sketchyWhite: "#ffffff",
+              sketchyBlack: "#1a1a1a",
+            },
+            animation: {
+              wobble: "wobble 3s ease-in-out infinite",
+              float: "float 5s ease-in-out infinite",
+              draw: "draw 2s ease-out forwards",
+            },
+            keyframes: {
+              wobble: {
+                "0%, 100%": { transform: "rotate(-1deg) scale(1)" },
+                "50%": { transform: "rotate(1deg) scale(1.02)" },
+              },
+              float: {
+                "0%, 100%": { transform: "translateY(0)" },
+                "50%": { transform: "translateY(-15px)" },
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <style type="text/css">
+      body {
+        background-color: #fff;
+        background-image: radial-gradient(#ddd 1px, transparent 1px),
+          radial-gradient(#ddd 1px, transparent 1px);
+        background-size: 40px 40px;
+        background-position: 0 0, 20px 20px;
+        font-family: "Indie Flower", cursive;
+        overflow-x: hidden;
+      }
+
+      /* Sketchy Borders */
+      .sketch-border {
+        border: 3px solid #1a1a1a;
+        border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+      }
+
+      .sketch-border-bottom {
+        border-bottom: 3px solid #1a1a1a;
+        border-bottom-left-radius: 50% 10px;
+        border-bottom-right-radius: 50% 10px;
+      }
+
+      .sketch-card {
+        border: 2px solid #1a1a1a;
+        border-radius: 12px 34px 15px 28px/24px 12px 36px 18px;
+        transition: all 0.3s ease;
+      }
+
+      .sketch-card:hover {
+        transform: scale(1.02) rotate(1deg);
+        box-shadow: 8px 8px 0px #1a1a1a;
+      }
+
+      /* Button Styles */
+      .btn-sketch {
+        background: #fff;
+        border: 2px solid #1a1a1a;
+        border-radius: 8px 18px 12px 24px/16px 12px 22px 14px;
+        padding: 10px 24px;
+        font-weight: bold;
+        display: inline-block;
+        transition: all 0.2s;
+        cursor: pointer;
+        position: relative;
+      }
+
+      .btn-sketch:hover {
+        transform: translateY(-3px) rotate(-1deg);
+        box-shadow: 4px 4px 0px #1a1a1a;
+      }
+
+      .btn-sketch:active {
+        transform: translateY(1px);
+        box-shadow: 1px 1px 0px #1a1a1a;
+      }
+
+      .btn-sketch-black {
+        background: #1a1a1a;
+        color: #fff;
+        border: 2px solid #fff;
+      }
+
+      /* Mobile Menu */
+      #mobile-menu {
+        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 10px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: #1a1a1a;
+        border-radius: 5px;
+      }
+
+      /* Scribble Decorations */
+      .scribble {
+        pointer-events: none;
+        opacity: 0.6;
+      }
+
+      .shake-on-hover:hover {
+        animation: wobble 0.5s infinite;
+      }
+    </style>
+  </head>
+
+  <body class="text-sketchyBlack">
+    <!-- NAVIGATION -->
+    <nav
+      class="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-sm sketch-border-bottom px-6 py-4"
+    >
+      <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <!-- Logo -->
+        <div class="flex items-center gap-2">
+          <!-- REPLACE: logo image -->
+          <img
+            src="images/flork-logo-favicon.jpg"
+            alt="FLORK Logo"
+            class="w-10 h-10 rounded-full border-2 border-black rotate-[-5deg]"
+          />
+          <span class="text-3xl font-bold tracking-tight">FLORK</span>
+        </div>
+
+        <!-- Desktop Nav -->
+        <div class="hidden md:flex gap-8 text-xl">
+          <a
+            href="#about"
+            class="hover:underline underline-offset-4 decoration-wavy"
+            >About</a
+          >
+          <a
+            href="#lore"
+            class="hover:underline underline-offset-4 decoration-wavy"
+            >Lore</a
+          >
+          <a
+            href="#tokenomics"
+            class="hover:underline underline-offset-4 decoration-wavy"
+            >Tokenomics</a
+          >
+          <a
+            href="#howtobuy"
+            class="hover:underline underline-offset-4 decoration-wavy"
+            >How to Buy</a
+          >
+          <a
+            href="#community"
+            class="hover:underline underline-offset-4 decoration-wavy"
+            >Community</a
+          >
+        </div>
+
+        <!-- Action Area -->
+        <div class="flex items-center gap-4">
+          <div class="hidden lg:flex gap-4 text-2xl">
+            <a href="#" class="hover:scale-110 transition"
+              ><i class="fa-brands fa-telegram"></i
+            ></a>
+            <a href="#" class="hover:scale-110 transition"
+              ><i class="fa-brands fa-x-twitter"></i
+            ></a>
+          </div>
+          <a href="#" class="btn-sketch text-lg hidden sm:block">Buy Now</a>
+          <button id="menu-btn" class="md:hidden text-3xl">☰</button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- MOBILE MENU DROPDOWN -->
+    <div
+      id="mobile-menu"
+      class="fixed inset-0 bg-white z-[60] flex flex-col items-center justify-center gap-8 text-3xl translate-y-[-100%]"
+    >
+      <button id="close-menu" class="absolute top-6 right-8 text-4xl">✕</button>
+      <a href="#about" class="mobile-link">About</a>
+      <a href="#lore" class="mobile-link">Lore</a>
+      <a href="#tokenomics" class="mobile-link">Tokenomics</a>
+      <a href="#howtobuy" class="mobile-link">How to Buy</a>
+      <a href="#community" class="mobile-link">Community</a>
+      <div class="flex gap-6 mt-4">
+        <a href="#"><i class="fa-brands fa-telegram"></i></a>
+        <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+      </div>
+    </div>
+
+    <!-- 1. HERO SECTION -->
+    <section
+      class="min-h-screen pt-32 pb-20 px-6 flex flex-col items-center justify-center text-center relative overflow-hidden"
+    >
+      <!-- Background Doodles -->
+      <div class="scribble absolute top-20 left-10 text-4xl rotate-12">⭐</div>
+      <div
+        class="scribble absolute bottom-20 right-10 text-6xl rotate-[-15deg]"
+      >
+        🌀
+      </div>
+      <div class="scribble absolute top-1/2 left-[10%] text-5xl">✏️</div>
+
+      <div class="animate-float mb-8">
+        <!-- REPLACE: hero image -->
+        <img
+          src="images/hero-image-flork.png"
+          alt="FLORK Character"
+          class="w-64 md:w-80 sketch-border bg-white p-2"
+        />
+      </div>
+
+      <h1 class="text-5xl md:text-8xl font-bold mb-6 relative">
+        The Flork Alien of Ethereum
+        <svg
+          class="absolute -bottom-4 left-0 w-full h-4"
+          viewBox="0 0 500 20"
+          preserveAspectRatio="none"
+        >
+          <path
+            d="M0,10 Q125,0 250,10 T500,10"
+            fill="none"
+            stroke="black"
+            stroke-width="4"
+          />
+        </svg>
+      </h1>
+      <p class="text-2xl md:text-3xl max-w-2xl mb-10 text-gray-700">
+        Drawn in a daze, born on the chain. FLORK ALIEN is the hand-drawn Alien based on original Flork we
+        didn't know we needed. No utility, just scribbles and vibes.
+      </p>
+
+      <div class="flex flex-wrap justify-center gap-6">
+        <a
+          href="https://dexscreener.com/ethereum/0xComingSoon"
+          class="btn-sketch btn-sketch-black text-2xl px-12 py-4"
+          >Buy $FLORK</a
+        >
+        <a
+          href="https://www.dextools.io/app/en/ethereum/pair-explorer/0xComingSoona"
+          class="btn-sketch text-2xl px-12 py-4"
+          >View Chart</a
+        >
+      </div>
+    </section>
+
+    <!-- 2. ABOUT SECTION -->
+    <section id="about" class="py-20 px-6 max-w-6xl mx-auto overflow-hidden">
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div class="relative">
+          <!-- REPLACE: about image -->
+          <img
+            src="images/what-is-flork.png"
+            alt="About Flork"
+            class="w-full sketch-border rotate-[-2deg]"
+          />
+          <div class="absolute -top-6 -right-6 text-6xl animate-bounce">❓</div>
+        </div>
+        <div>
+          <h2 class="text-4xl md:text-6xl font-bold mb-8">What is FLORK ALIEN?</h2>
+          <div class="text-xl md:text-2xl space-y-6 leading-relaxed">
+            <p>
+              FLORK ALIEN isn't your average high-fidelity 3D mascot. This Alien is a rough
+              sketch, a doodle of destiny, a minimalist masterpiece created in
+              the margins of a forgotten notebook.
+            </p>
+            <p>
+              While other coins promise the moon with shiny renders, FLORK ALIEN
+              promises to stay sketchy. We're here to bring back the raw energy
+              of early internet memes—one wobbly line at a time.
+            </p>
+            <p>
+              On Ethereum, where everything moves fast, FLORK ALIEN moves at the speed
+              of a pencil on paper. Pure community, pure chaos, pure Flork Alien.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. LORE & STORY -->
+    <section
+      id="lore"
+      class="bg-sketchyBlack text-white py-24 px-6 relative overflow-hidden"
+    >
+      <div class="max-w-6xl mx-auto">
+        <h2 class="text-5xl md:text-7xl font-bold mb-16 text-center">
+          The Origin Scribbles
+        </h2>
+
+        <div class="grid md:grid-cols-3 gap-8">
+          <!-- Chapter 1 -->
+          <div
+            class="sketch-card p-6 bg-zinc-900 border-white hover:scale-105 transition-transform"
+          >
+            <!-- REPLACE: lore image 1 -->
+            <img
+              src="images/the-meeting-origin.png"
+              alt="Lore 1"
+              class="w-full h-48 object-cover mb-6 grayscale sketch-border border-white"
+            />
+            <h3 class="text-3xl font-bold mb-4">I. The Meeting</h3>
+            <p class="text-lg opacity-80">
+              Born in the margins of a 2-hour corporate Zoom call about
+              "synergy." Florklien was just a stress-relieving doodle until he
+              looked back at his creator.
+            </p>
+          </div>
+
+          <!-- Chapter 2 -->
+          <div
+            class="sketch-card p-6 bg-zinc-900 border-white hover:scale-105 transition-transform md:translate-y-8"
+          >
+            <!-- REPLACE: lore image 2 -->
+            <img
+              src="images/the-leap-origin.png"
+              alt="Lore 2"
+              class="w-full h-48 object-cover mb-6 grayscale sketch-border border-white"
+            />
+            <h3 class="text-3xl font-bold mb-4">II. The Leap</h3>
+            <p class="text-lg opacity-80">
+              Flork realized the paper would eventually yellow and fade. He
+              hopped onto the Ethereum blockchain, trading his pencil lead for
+              eternal code.
+            </p>
+          </div>
+
+          <!-- Chapter 3 -->
+          <div
+            class="sketch-card p-6 bg-zinc-900 border-white hover:scale-105 transition-transform"
+          >
+            <!-- REPLACE: lore image 3 -->
+            <img
+              src="images/the-era-origin.png"
+              alt="Lore 3"
+              class="w-full h-48 object-cover mb-6 grayscale sketch-border border-white"
+            />
+            <h3 class="text-3xl font-bold mb-4">III. The Era</h3>
+            <p class="text-lg opacity-80">
+              Now, Florklien is here to erase the "serious" from finance. Armed with
+              a giant eraser, he’s deleting red candles across the ecosystem.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. TOKENOMICS -->
+    <section id="tokenomics" class="py-24 px-6 overflow-hidden">
+      <div class="max-w-5xl mx-auto text-center">
+        <h2 class="text-5xl md:text-7xl font-bold mb-16">Tokenomics</h2>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
+          <div class="sketch-card p-6 flex flex-col items-center">
+            <span class="text-lg opacity-60">Ticker</span>
+            <span class="text-3xl font-bold">$Florklien</span>
+          </div>
+          <div class="sketch-card p-6 flex flex-col items-center">
+            <span class="text-lg opacity-60">Supply</span>
+            <span class="text-3xl font-bold">1 B</span>
+          </div>
+          <div class="sketch-card p-6 flex flex-col items-center">
+            <span class="text-lg opacity-60">Tax</span>
+            <span class="text-3xl font-bold">0/0</span>
+          </div>
+          <div class="sketch-card p-6 flex flex-col items-center">
+            <span class="text-lg opacity-60">LP</span>
+            <span class="text-3xl font-bold">Locked 🔒</span>
+          </div>
+        </div>
+
+        <div class="relative inline-block py-12">
+          <div
+            class="sketch-border bg-white p-10 max-w-xl mx-auto rotate-1 relative z-10"
+          >
+            <p class="text-3xl font-bold mb-6">
+              "No Rug. Contract Renounced. No Flocklien Business (besides
+              Flork himself)."
+            </p>
+            <div class="flex justify-center gap-8 text-4xl">
+              <i class="fa-solid fa-lock"></i>
+              <i class="fa-solid fa-fire"></i>
+              <i class="fa-solid fa-pen-nib"></i>
+            </div>
+          </div>
+          <div
+            class="absolute -top-4 -left-4 w-full h-full bg-black/5 sketch-border -z-10 -rotate-2"
+          ></div>
+          <!-- REPLACE: tokenomics flork -->
+          <img
+            src="images/hero-image-flork.png"
+            alt="Tokenomics Flork"
+            class="absolute -bottom-10 -right-10 w-32 h-32 rounded-full border-2 border-black z-20 rotate-12"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- 4.5 THE SKETCHBOOK -->
+    <section id="sketchbook" class="py-24 px-6">
+      <div class="max-w-6xl mx-auto text-center">
+        <h2 class="text-5xl md:text-7xl font-bold mb-16">Gallery</h2>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div
+            class="sketch-card p-4 bg-white flex items-center justify-center overflow-hidden h-64"
+          >
+            <img
+              src="images/Flork-38.png"
+              alt="Flork Doodle 38"
+              class="w-full h-full object-contain"
+            />
+          </div>
+          <div
+            class="sketch-card p-4 bg-white flex items-center justify-center overflow-hidden h-64"
+          >
+            <img
+              src="images/Flork-52.png"
+              alt="Flork Doodle 52"
+              class="w-full h-full object-contain"
+            />
+          </div>
+          <div
+            class="sketch-card p-4 bg-white flex items-center justify-center overflow-hidden h-64"
+          >
+            <img
+              src="images/Flork-57.png"
+              alt="Flork Doodle 57"
+              class="w-full h-full object-contain"
+            />
+          </div>
+          <div
+            class="sketch-card p-4 bg-white flex items-center justify-center overflow-hidden h-64"
+          >
+            <img
+              src="images/flork-png-032-600x582.png"
+              alt="Flork Doodle 32"
+              class="w-full h-full object-contain"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. HOW TO BUY -->
+    <section id="howtobuy" class="py-24 px-6 bg-zinc-50">
+      <div class="max-w-6xl mx-auto">
+        <h2 class="text-5xl md:text-7xl font-bold mb-16 text-center">
+          How to Buy
+        </h2>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+          <!-- Step 1 -->
+          <div class="flex flex-col items-center text-center">
+            <div class="text-6xl font-bold mb-4 opacity-20">1</div>
+            <div class="w-32 h-32 mb-6 sketch-border overflow-hidden bg-white">
+              <!-- REPLACE: step 1 image -->
+              <img
+                src="images/how-to-1.png"
+                alt="Step 1"
+                class="w-full h-full object-cover"
+              />
+            </div>
+            <h3 class="text-2xl font-bold mb-2">Get a Wallet</h3>
+            <p>
+              Download Metamask or other Ethereum compatible wallet as a browser
+              extension.
+            </p>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="flex flex-col items-center text-center">
+            <div class="text-6xl font-bold mb-4 opacity-20">2</div>
+            <div class="w-32 h-32 mb-6 sketch-border overflow-hidden bg-white">
+              <!-- REPLACE: step 2 image -->
+              <img
+                src="images/how-to-2.png"
+                alt="Step 2"
+                class="w-full h-full object-cover"
+              />
+            </div>
+            <h3 class="text-2xl font-bold mb-2">Secure SOL</h3>
+            <p>
+              Buy ETH on an exchange (Coinbase, Binance, etc.) and send it to
+              your wallet address.
+            </p>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="flex flex-col items-center text-center">
+            <div class="text-6xl font-bold mb-4 opacity-20">3</div>
+            <div class="w-32 h-32 mb-6 sketch-border overflow-hidden bg-white">
+              <!-- REPLACE: step 3 image -->
+              <img
+                src="images/how-to-3.png"
+                alt="Step 3"
+                class="w-full h-full object-cover"
+              />
+            </div>
+            <h3 class="text-2xl font-bold mb-2">Swap on DEX</h3>
+            <p>
+              Connect your wallet to Uniswap. Input the Florklien CA and
+              swap your ETH.
+            </p>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="flex flex-col items-center text-center">
+            <div class="text-6xl font-bold mb-4 opacity-20">4</div>
+            <div class="w-32 h-32 mb-6 sketch-border overflow-hidden bg-white">
+              <!-- REPLACE: step 4 image -->
+              <img
+                src="images/how-to-4.png"
+                alt="Step 4"
+                class="w-full h-full object-cover"
+              />
+            </div>
+            <h3 class="text-2xl font-bold mb-2">HODL The Doodle</h3>
+            <p>
+              Congrats! You are now part of the most artistic cult on Ethereum.
+            </p>
+          </div>
+        </div>
+
+        <!-- CA Widget -->
+        <div class="max-w-2xl mx-auto">
+          <div class="sketch-border p-6 bg-white relative">
+            <p
+              class="text-center font-bold mb-3 uppercase tracking-widest text-sm opacity-60"
+            >
+              Contract Address
+            </p>
+            <div class="flex flex-col sm:flex-row items-center gap-4">
+              <code
+                id="ca-text"
+                class="bg-gray-100 p-4 rounded-lg flex-grow font-mono break-all text-lg border-2 border-black/10"
+                >0xComingSoon</code
+              >
+              <button
+                id="copy-btn"
+                class="btn-sketch btn-sketch-black whitespace-nowrap"
+              >
+                Copy CA
+              </button>
+            </div>
+            <div
+              id="copy-msg"
+              class="hidden absolute -bottom-10 left-1/2 -translate-x-1/2 text-center font-bold text-red-500 animate-bounce"
+            >
+              Copied! Don't lose it, Flork will haunt you 👁
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. COMMUNITY SECTION -->
+    <section
+      id="community"
+      class="bg-sketchyBlack text-white py-24 px-6 text-center overflow-hidden"
+    >
+      <div class="max-w-4xl mx-auto">
+        <div class="mb-12">
+          <!-- REPLACE: community main image -->
+          <img
+            src="images/hero-image-flork.png"
+            alt="Community Flork"
+            class="w-64 h-64 mx-auto rounded-full border-4 border-white animate-wobble"
+          />
+        </div>
+
+        <h2 class="text-5xl md:text-7xl font-bold mb-8">Join the Florklien</h2>
+        <p class="text-2xl mb-12 opacity-80">
+          Stop being perfect. Start being sketchy. Our community is waiting for
+          your scribbles.
+        </p>
+
+        <div class="grid sm:grid-cols-2 gap-6 mb-12">
+          <a
+            href="https://t.me/flork_portal"
+            target="_blank"
+            class="btn-sketch py-6 text-3xl flex items-center justify-center gap-4 text-black"
+          >
+            <i class="fa-brands fa-telegram"></i> Telegram
+          </a>
+          <a
+            href="https://x.com/florkme"
+            target="_blank"
+            class="btn-sketch py-6 text-3xl flex items-center justify-center gap-4 text-black"
+          >
+            <i class="fa-brands fa-x-twitter"></i> Twitter / X
+          </a>
+        </div>
+
+        <div class="flex flex-wrap justify-center gap-6 opacity-70">
+          <a
+            href="https://dexscreener.com/ethereum/0xComingSoon"
+            target="_blank"
+            class="hover:opacity-100 underline decoration-wavy"
+            >DexScreener</a
+          >
+          <a
+            href="https://www.dextools.io/app/en/ethereum/pair-explorer/0xComingSoon"
+            target="_blank"
+            class="hover:opacity-100 underline decoration-wavy"
+            >DEXTools</a
+          >
+          <a
+            href="https://app.uniswap.org/swap?chain=mainnet&inputCurrency=NATIVE&outputCurrency=0xComingSoon"
+            target="_blank"
+            class="hover:opacity-100 underline decoration-wavy"
+            >Uniswap</a
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. FOOTER -->
+    <footer class="py-12 px-6 border-t-2 border-black/10">
+      <div class="max-w-6xl mx-auto flex flex-col items-center gap-8">
+        <div class="text-4xl font-bold tracking-tight">FLORK</div>
+
+        <div class="flex gap-8 text-3xl">
+          <a href="#" class="hover:scale-125 transition"
+            ><i class="fa-brands fa-x-twitter"></i
+          ></a>
+        </div>
+
+        <p class="text-xl italic text-center">
+          "Flork Alien on SOL — just a Flocklien, making history"
+        </p>
+
+        <div class="max-w-2xl text-center text-sm opacity-50 space-y-4">
+          <p>
+            $Florklien is a meme coin with no intrinsic value or financial promise.
+            It was created by a guy with a pen and a dream. For entertainment
+            purposes only.
+          </p>
+          <p>&copy; 2026 FLORKLIEN. All scribbles reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- SCRIPTS -->
+    <script>
+      // Mobile Menu Logic
+      const menuBtn = document.getElementById("menu-btn");
+      const closeMenu = document.getElementById("close-menu");
+      const mobileMenu = document.getElementById("mobile-menu");
+      const mobileLinks = document.querySelectorAll(".mobile-link");
+
+      const toggleMenu = (show) => {
+        mobileMenu.style.transform = show
+          ? "translateY(0)"
+          : "translateY(-100%)";
+      };
+
+      menuBtn.addEventListener("click", () => toggleMenu(true));
+      closeMenu.addEventListener("click", () => toggleMenu(false));
+      mobileLinks.forEach((link) =>
+        link.addEventListener("click", () => toggleMenu(false))
+      );
+
+      // Copy Contract Address Logic
+      const copyBtn = document.getElementById("copy-btn");
+      const caText = document.getElementById("ca-text");
+      const copyMsg = document.getElementById("copy-msg");
+
+      copyBtn.addEventListener("click", () => {
+        const text = caText.innerText;
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+
+        // Show confirmation
+        copyMsg.classList.remove("hidden");
+        copyBtn.innerText = "COPIED!";
+
+        setTimeout(() => {
+          copyMsg.classList.add("hidden");
+          copyBtn.innerText = "Copy CA";
+        }, 3000);
+      });
+
+      // Simple Scroll Reveal for "Drawn" effect
+      const observerOptions = {
+        threshold: 0.1,
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = "1";
+            entry.target.style.transform = "translateY(0) rotate(0deg)";
+          }
+        });
+      }, observerOptions);
+
+      document.querySelectorAll("section").forEach((section) => {
+        if (section.id !== "hero") {
+          // Skip hero
+          section.style.opacity = "0.5";
+          section.style.transform = "translateY(20px) rotate(-1deg)";
+          section.style.transition = "all 0.8s ease-out";
+          observer.observe(section);
+        }
+      });
+    </script>
+  </body>
+</html>
